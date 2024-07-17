@@ -28,10 +28,17 @@ class Data(BaseModel):
 
 path = os.path.join('./model','encoder.pkl') # TODO: enter the path for the saved encoder
 encoder = load_model(path)
+if encoder is None:
+    raise RuntimeError("Failed to load encoder")
 
-path = os.path.join('./model','trained_model.pkl') # TODO: enter the path for the saved model 
+print("Encoder loaded successfully.")
+
+path = os.path.join('./model','model.pkl') # TODO: enter the path for the saved model 
 model = load_model(path)
+if model is None:
+    raise RuntimeError("Failed to load model")
 
+print("Model loaded successfully.")
 # TODO: create a RESTful API using FastAPI
 app = FastAPI()
 
@@ -44,7 +51,7 @@ async def get_root():
 
 
 # TODO: create a POST on a different path that does model inference
-@app.post("/data/")
+@app.post("/inference/")
 async def post_inference(data: Data):
     # DO NOT MODIFY: turn the Pydantic model into a dict.
     data_dict = data.dict()
@@ -67,11 +74,18 @@ async def post_inference(data: Data):
     data_processed, _, _, _ = process_data(
         # your code here
         # use data as data input
-        data,
+        X = data,
         categorical_features=cat_features,
+        label=None,
         # use training = False
-        training=False
+        training=False,
         # do not need to pass lb as input
+        encoder=encoder
     )
     _inference = inference(model, data_processed)# your code here to predict the result using data_processed
     return {"result": apply_label(_inference)}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
+

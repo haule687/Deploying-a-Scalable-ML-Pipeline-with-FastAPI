@@ -65,9 +65,7 @@ encoder_path = os.path.join(project_path, "model", "encoder.pkl")
 save_model(encoder, encoder_path)
 
 # load the model
-model = load_model(
-    model_path
-) 
+model = load_model(model_path) 
 
 # TODO: use the inference function to run the model inferences on the test dataset.
 preds = inference(model, X_test)# your code here
@@ -88,8 +86,12 @@ for col in cat_features:
             data = test,
             column_name = col,
             slice_value = slicevalue,
-            categorical_features = cat_features
+            categorical_features = cat_features,
+            label = "salary",
+            encoder = encoder,
+            lb = lb,
+            model = model 
         )
-        with open("slice_output.txt", "a") as f:
-            print(f"{col}: {slicevalue}, Count: {count:,}", file=f)
-            print(f"Precision: {p:.4f} | Recall: {r:.4f} | F1: {fb:.4f}", file=f)
+    with open("slice_output.txt", "a") as f:
+        print(f"{col}: {slicevalue}, Count: {count:,}", file=f)
+        print(f"Precision: {p:.4f} | Recall: {r:.4f} | F1: {fb:.4f}", file=f)

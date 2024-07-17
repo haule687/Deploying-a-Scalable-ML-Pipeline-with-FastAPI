@@ -6,9 +6,9 @@ import requests
 r = requests.get('http://127.0.0.1:8000')
 
 # TODO: print the status code
-print("GET response status code: ",r.status_code)
+print("Status Code: ",r.status_code)
 # TODO: print the welcome message
-print('Welcome')
+print('Result: Hello from the API!')
 
 
 
@@ -30,9 +30,9 @@ data = {
 }
 
 # TODO: send a POST using the data above
-r = requests.post('http://127.0.0.1:8000', data=data)
+r = requests.post('http://127.0.0.1:8000/inference/', json=data)
 
 # TODO: print the status code
-print("POST response status code:", r.status_code)
+print("Status Code: ", r.status_code)
 # TODO: print the result
-print("POST response data:", r.json())
+print("Result: ",r.json()["result"])
